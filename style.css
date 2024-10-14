@@ -282,14 +282,6 @@ input {
     font-family: Verdana, Tahoma, sans-serif;
 }
 
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-align-self: stretch;
-flex-grow: 0;
-
-
 /* Rectangle 1 */
 
 .add-product-form{
@@ -324,25 +316,25 @@ flex-grow: 0;
     
 }
 
-/* Inside auto layout */
-flex: none;
-order: 2;
-align-self: stretch;
-flex-grow: 0;
+.btn__eliminar__producto img {
+  max-width: 20px; /* Ajusta el ancho máximo según sea necesario */
+  max-height: 20px; /* Ajusta la altura máxima según sea necesario */
+  display: block;
+  margin: auto;
+}
 
 /*------------------------------ FOOTER (RODAPIE) ---------------------------------*/
 
 .footer{
-    display: flex;
-    padding: 10px;
-    height: auto;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 
 .contenido_footer{
     display: flex;
-    width: auto;
+    height: auto;
+    width: 100%;
     background-color: var(--color-septimo);
 }
 
@@ -353,19 +345,20 @@ flex-grow: 0;
 
 .footer_text_contenido{
     display: flex;
-    position: initial;
+    width: 50%;
 }
 
 .derechos_de_autor_text{
     position: relative;
-    font-size: 60%;
+    display: flex;
+    font-size: 70%;
     color: var(--color-primario);
     font-family: var(--fuente-calibri);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 80px;
+    margin-left: 50%;
 }
 
 .presentación__logo__personal{
@@ -414,7 +407,8 @@ flex-grow: 0;
 }
 
 /* Tableta */
-@media (min-width: 768px) and (max-width: 990px) {
+@media (min-width: 768px) and (max-width: 990px)
+{
     .products-container {
         grid-template-columns: repeat(2, 1fr); /* Dos productos por fila */
     }

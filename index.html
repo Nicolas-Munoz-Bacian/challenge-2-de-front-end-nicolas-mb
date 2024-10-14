@@ -31,7 +31,7 @@
                         <div class="card-container--info">
                           <p class="name">Nueva leche Soprole 100% natural y ecológica</p>
                           <div class="card-container--value">
-                            <p class="price">$ 1.250</p>
+                            <p class="price">$ 1.000</p>
                             <!-- Botones de eliminación en cada producto -->
                             <button class="btn__eliminar__producto" type="button">
                             <img src="./assets/bote-de-basura.png" alt="Eliminar producto">
@@ -115,23 +115,22 @@
     </section> 
       
           <!-- Sección de Agregar Producto -->
-    <section class="agregar_producto" data-formulario>
-    <form class="agregar_producto_forma" data-formulario>
-      <h1 class="agregar_producto_titulo">AGREGAR PRODUCTO:</h1>
-        <!-- Formulario para agregar producto nuevo aquí -->
-      <div class="formulario__campo">
-          <label class="campo__etiqueta" for="url">Añadir datos</label>
-      </div>
-      <input class="nombre__producto" type="text" id="name" placeholder="nombre..." data-name>
-      <input type="number" id="price" placeholder="precio..." data-price>
-      <input name="url" class="campo__escrita" required
-      placeholder="URL de la imagen" id='url' data-url>
-      <input type="hidden" id="edit-product-id" value="" data-id placeholder="añadir producto nuevo...">
-      <div class="botones">
-          <button class="boton__enviar" id="addProductBtn" type="submit">Enviar</button>
+    <section class="agregar_producto">
+      <form class="agregar_producto_forma" id="product-form" data-formulario>
+        <h1 class="agregar_producto_titulo">AGREGAR PRODUCTO:</h1>
+        <div class="formulario__campo">
+        <input type="text" id="name" placeholder="Nombre del producto" data-name required>
+        <input type="number" id="price" placeholder="Precio del producto" data-price required>
+        <input type="url" id="url" placeholder="URL de la imagen" data-image required>
+        <input type="url" id="" placeholder="Otra URL (si es necesario)" data-url required>
+
+        <div class="botones">
+          <button class="boton__enviar" id="addProductBtn" type="submit">Agregar</button>
           <button class="boton__limpiar" id="clearFormBtn" type="button">Limpiar</button>
-      </div>
-  </form>
+        </div>
+        </div>
+    </form>
+    
     </section>
 </main>
 
@@ -150,7 +149,53 @@
   </div>
 </footer>
 
-<script type="module" src="./js/main.js"></script>
+<script>
+  // Obtener el contenedor de productos
+  const productsContainer = document.getElementById('products-container');
+
+// Obtener el formulario
+const productForm = document.getElementById('product-form');
+
+// Agregar un evento submit al formulario
+productForm.addEventListener('submit', (event) => {
+  event.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
+
+  // Obtener los valores del formulario
+  const name = document.getElementById('product-name').value;
+  const image = document.getElementById('product-image').value;
+  const price = document.getElementById('product-price').value;
+
+  // Crear un nuevo elemento div para la tarjeta del producto
+  const newProduct = document.createElement('div');
+  newProduct.classList.add('card');
+  newProduct.innerHTML = `
+    <img class="image" src="${image}" alt="imagen-producto"/>
+    <div class="card-container--info">
+      <p class="name">${name}</p>
+      <div class="card-container--value">
+        <p class="price">${price}</p>
+        <button class="btn__eliminar__producto" type="button">
+          <img src="./assets/bote-de-basura.png" alt="Eliminar producto">
+        </button>
+      </div>
+    </div>
+  `;
+
+  // Agregar un evento click al botón de eliminación
+  const deleteButton = newProduct.querySelector('.btn__eliminar__producto');
+  deleteButton.addEventListener('click', () => {
+    newProduct.remove(); // Eliminar el producto del contenedor
+  });
+
+  // Agregar el nuevo producto al contenedor
+  productsContainer.appendChild(newProduct);
+});
+</script>
+
+
+<script type="module" src="./js/script.js"></script>
 <script src="./js/conexionAPI.js" type="module"></script>
+<script src="./js/crearProducto.js" type="module"></script>
+
 </body>
 </html>

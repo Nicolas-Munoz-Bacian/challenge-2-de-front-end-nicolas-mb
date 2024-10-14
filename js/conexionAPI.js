@@ -1,46 +1,48 @@
+// API functions
+
+async function listarProductos() {
+    try {
+        const response = await fetch("http://localhost:3000/products");
+        return await response.json();
+    } catch (error) {
+        console.error('Error al listar productos:', error);
+        return []; // Retorna un arreglo vacío en caso de error
+    }
+}
+
 async function enviarCard(titulo, price, url, imagen) {
     try {
-        const conexion = await fetch("http://localhost:3000/products", {
+        const response = await fetch("http://localhost:3000/products", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 name: titulo,
                 price: price,
                 url: url,
-                image: imagen
+                imagen: imagen
             })
         });
-        const conexionConvertida = await conexion.json();
-        return conexionConvertida;
+
+        if (!response.ok) {
+            throw new Error('Error al enviar producto');
+        }
+
+        return await response.json();
     } catch (error) {
         console.error('Error al enviar producto:', error);
+        throw error; // Lanza el error para que pueda ser manejado más adelante
     }
 }
 
 async function buscarProductos(palabraClave) {
     try {
-        const conexion = await fetch(`http://localhost:3000/products?q=${palabraClave}`);
-        const conexionConvertida = await conexion.json();
-        return conexionConvertida;
+        const response = await fetch(`http://localhost:3000/products?q=${palabraClave}`);
+        return await response.json();
     } catch (error) {
         console.error('Error al buscar productos:', error);
+        return []; // Retorna un arreglo vacío en caso de error
     }
 }
-
-export async function eliminarProducto(id) {
-    try {
-        const response = await fetch(`http://localhost:3000/products/${id}`, {
-            method: "DELETE"
-        });
-        if (!response.ok) {
-            throw new Error('Error al eliminar el producto');
-        }
-        return true;
-    } catch (error) {
-        console.error('Error al eliminar producto:', error);
-    }
-}
-
 
 export const conexionAPI = {
     listarProductos,
@@ -48,19 +50,15 @@ export const conexionAPI = {
     buscarProductos
 };
 
-// Puedes probar las funciones como necesarias
-// listarProductos().then(data => console.log(data));
-// enviarCard('Nuevo Producto', 100, 'https://example.com/image.jpg', 'some-image.jpg').then(data => console.log(data));
-// buscarProductos('Stormtrooper').then(data => console.log(data));
-
+// Función para crear un producto desde el formulario
 async function crearCard(evento) {
-    evento.preventDefault();  // Evita el comportamiento predeterminado que recarga la página
+    evento.preventDefault(); // Evita el comportamiento predeterminado
 
     // Capturar cada valor de input
-    const name = document.querySelector("[data-name]").value;
-    const price = document.querySelector("[data-price]").value;
-    const image = document.querySelector("[data-image]").value;
-    const url = document.querySelector("[data-url]").value;
+    const name = document.querySelector("[data-name]").value; // Nombre del producto
+    const price = document.querySelector("[data-price]").value; // Precio del producto
+    const image = document.querySelector("[data-image]").value; // URL de la imagen
+    const url = document.querySelector("[data-url]").value; // Otro campo que puedas necesitar
 
     // Validación básica de campos vacíos
     if (!name || !price || !image || !url) {
@@ -77,6 +75,12 @@ async function crearCard(evento) {
     } catch (error) {
         // Manejo de posibles errores en la operación
         console.error('Error al crear producto:', error);
+        alert('Ocurrió un error al intentar crear el producto.'); // Puede notificar al usuario
     }
 }
 
+// Agregar evento al formulario (Ejecutar al cargar el DOM)
+document.addEventListener("DOMContentLoaded", () => {
+    const productForm = document.getElementById("product-form");
+    productForm.addEventListener("submit", crearCard); // Agregar manejador de evento al formulario
+});
