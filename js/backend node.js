@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+app.use(cors());
 
 const app = express();
 const port = 3000;
@@ -13,7 +14,8 @@ app.use(bodyParser.json());
 let products = [
   { id: 1, name: 'Leche Soprole', price: 1250, image: 'url-a-imagen-1' },
   { id: 2, name: 'Mermelada de Mango', price: 2500, image: 'url-a-imagen-2' },
-  { id: 3, name: 'Zapatos de bebe', price: 5000, image: 'url-a-imagen-3'}
+  { id: 3, name: 'Zapatos de bebe', price: 5000, image: 'url-a-imagen-3'},
+  {id: 4, name: 'Envoltura reciclable', price: 2000, image: 'url-a-imagen-4'}
 ];
 
 // Rutas CRUD
