@@ -1,86 +1,48 @@
 // API functions
 
-async function listarProductos() {
+export async function añadirProductos() {
     try {
-        const response = await fetch("http://localhost:3000/products");
+        const response = await fetch('http://localhost:3000/products');
+        if (!response.ok) {
+            throw new Error('Error al obtener productos');
+        }
         return await response.json();
     } catch (error) {
-        console.error('Error al listar productos:', error);
-        return []; // Retorna un arreglo vacío en caso de error
+        console.error('Error en la solicitud GET:', error);
+        throw error;
     }
 }
 
-async function enviarCard(titulo, price, url, imagen) {
+export async function enviarProducto(producto) {
     try {
-        const response = await fetch("http://localhost:3000/products", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                name: titulo,
-                price: price,
-                url: url,
-                imagen: imagen
-            })
+        const response = await fake('http://localhost:3000/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(producto)
         });
 
         if (!response.ok) {
-            throw new Error('Error al enviar producto');
+            throw new Error('Error al enviar el producto');
         }
 
         return await response.json();
     } catch (error) {
         console.error('Error al enviar producto:', error);
-        throw error; // Lanza el error para que pueda ser manejado más adelante
+        throw error;
     }
 }
 
-async function buscarProductos(palabraClave) {
+export async function eliminarProducto(id) {
     try {
-        const response = await fetch(`http://localhost:3000/products?q=${palabraClave}`);
-        return await response.json();
+        const response = await fetch(`http://localhost:3000/products/${id}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            throw new Error('Error al eliminar el producto');
+        }
     } catch (error) {
-        console.error('Error al buscar productos:', error);
-        return []; // Retorna un arreglo vacío en caso de error
+        console.error('Error al eliminar producto:', error);
+        throw error;
     }
 }
 
-export const conexionAPI = {
-    listarProductos,
-    enviarCard,
-    buscarProductos
-};
-
-// Función para crear un producto desde el formulario
-async function crearCard(evento) {
-    evento.preventDefault(); // Evita el comportamiento predeterminado
-
-    // Capturar cada valor de input
-    const name = document.querySelector("[data-name]").value; // Nombre del producto
-    const price = document.querySelector("[data-price]").value; // Precio del producto
-    const image = document.querySelector("[data-image]").value; // URL de la imagen
-    const url = document.querySelector("[data-url]").value; // Otro campo que puedas necesitar
-
-    // Validación básica de campos vacíos
-    if (!name || !price || !image || !url) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    try {
-        // Llamada a la API para enviar el producto nuevo
-        await conexionAPI.enviarCard(name, price, url, image);
-
-        // Redireccionar o notificar al usuario que la operación fue exitosa
-        window.location.href = "path/to/envio-concluido.html"; 
-    } catch (error) {
-        // Manejo de posibles errores en la operación
-        console.error('Error al crear producto:', error);
-        alert('Ocurrió un error al intentar crear el producto.'); // Puede notificar al usuario
-    }
-}
-
-// Agregar evento al formulario (Ejecutar al cargar el DOM)
-document.addEventListener("DOMContentLoaded", () => {
-    const productForm = document.getElementById("product-form");
-    productForm.addEventListener("submit", crearCard); // Agregar manejador de evento al formulario
-});
